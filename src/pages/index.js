@@ -17,16 +17,18 @@ const Payment = () => {
       transactionRef: generateTransactionRef(),
     });
 
-    // Open the UPI link
+    console.log('Generated UPI Link:', upiLink);
+
+    // Attempt to open the UPI link directly
     window.location.href = upiLink;
   };
 
   const generateUpiLink = ({ payeeVpa, payeeName, amount, transactionRef }) => {
-    const baseLink = `upi://pay?pa=${payeeVpa}&pn=${payeeName}&am=${amount}&tn=${transactionRef}&cu=INR`;
+    const baseLink = `upi://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR`;
     if (selectedUpiApp === 'GPay') {
-      return `googlepay://pay?${baseLink}`;
+      return `https://pay.google.com/gp/p/ui/pay?${baseLink}`;
     } else if (selectedUpiApp === 'PhonePe') {
-      return `phonepe://pay?${baseLink}`;
+      return `https://phon.pe/_pay?link=${encodeURIComponent(baseLink)}`;
     } else {
       return baseLink;
     }
