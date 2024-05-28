@@ -5,7 +5,6 @@ const Payment = () => {
   const [payeeVpa, setPayeeVpa] = useState('s3rinfy@icici');
   const [payeeName, setPayeeName] = useState('Souvik Roy');
   const [amount, setAmount] = useState('1.00');
-  const [selectedUpiApp, setSelectedUpiApp] = useState(null);
 
   const handlePayment = () => {
     const upiLink = generateUpiLink({
@@ -17,25 +16,24 @@ const Payment = () => {
 
     console.log('Generated UPI Link:', upiLink);
 
-    // Attempt to open the UPI link directly
-    window.location.href = upiLink;
+    if (/android/i.test(navigator.userAgent)) {
+      // Open a dummy intent to trigger the chooser
+      const dummyIntent = `intent://#Intent;scheme=upi;action=android.intent.action.VIEW;end`;
+      window.location.href = dummyIntent;
+
+      // Open the actual UPI link after a slight delay to ensure the chooser is shown
+      setTimeout(() => {
+        window.location.href = upiLink;
+      }, 500);
+    } else {
+      // For iOS and other platforms
+      window.location.href = upiLink;
+    }
   };
 
   const generateUpiLink = ({ payeeVpa, payeeName, amount, transactionRef }) => {
     const baseLink = `upi://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR`;
-
-    if (/android/i.test(navigator.userAgent)) {
-      // Use the intent link to prompt the chooser dialog
-      return `intent://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR&url=${encodeURIComponent(baseLink)}#Intent;scheme=upi;action=android.intent.action.VIEW;end`;
-    } else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-      return baseLink; // iOS handles UPI links natively
-    } else if (/Windows/i.test(navigator.userAgent)) {
-      // Handle Windows or other platforms by showing instructions or fallback
-      alert("UPI payment can be done only through mobile devices with UPI apps installed.");
-      return '#'; // Provide a fallback or show a message
-    } else {
-      return baseLink; // Default fallback for other platforms
-    }
+    return baseLink; // Use the base link for both Android and iOS
   };
 
   const generateTransactionRef = () => {
