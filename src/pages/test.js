@@ -22,7 +22,15 @@ const Payment = () => {
 
   const generateUpiLink = ({ payeeVpa, payeeName, amount, transactionRef }) => {
     const baseLink = `upi://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR`;
-    return `intent://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR&url=${encodeURIComponent(baseLink)}#Intent;scheme=upi;action=android.intent.action.VIEW;end`;
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/android/i.test(userAgent)) {
+      return `intent://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR&url=${encodeURIComponent(baseLink)}#Intent;scheme=upi;action=android.intent.action.VIEW;end`;
+    } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      return baseLink;
+    } else {
+      return baseLink;
+    }
   };
 
   const generateTransactionRef = () => {
