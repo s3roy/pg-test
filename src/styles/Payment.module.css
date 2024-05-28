@@ -38,4 +38,36 @@
     font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }  
+  }
+  
+  .upiOptions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .upiButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .upiButton img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
