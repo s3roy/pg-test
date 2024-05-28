@@ -4,13 +4,13 @@ import styles from '../styles/Payment.module.css';
 
 const Payment = () => {
   const router = useRouter();
-  const [payeeVpa, setPayeeVpa] = useState('souvikroy1999ab-1@okaxis');
+  const [payeeVpa, setPayeeVpa] = useState('s3rinfy@icici');
   const [payeeName, setPayeeName] = useState('Souvik Roy');
   const [amount, setAmount] = useState('1.00');
 
   const handlePayment = () => {
     const upiLink = generateUpiLink({
-      payeeVpa: payeeVpa || 'souvikroy1999ab-1@okaxis',
+      payeeVpa: payeeVpa || 's3rinfy@icici',
       payeeName: payeeName || 'Souvik Roy',
       amount: amount || '1.00',
       transactionRef: generateTransactionRef(),
