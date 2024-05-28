@@ -29,7 +29,7 @@ const Payment = () => {
     if (selectedUpiApp === 'GPay') {
       return `intent://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR&url=https://pay.google.com/gp/p/ui/pay&package=com.google.android.apps.nbu.paisa.user&scheme=upi#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
     } else if (selectedUpiApp === 'PhonePe') {
-      return `intent://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR&url=https://phon.pe/_pay&package=com.phonepe.app&scheme=upi#Intent;scheme=upi;package=com.phonepe.app;end`;
+        return `https://phon.pe/_pay?link=${encodeURIComponent(baseLink)}`;
     } else {
       return baseLink;
     }
