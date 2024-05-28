@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/Payment.module.css';
 
 const Payment = () => {
   const [payeeVpa, setPayeeVpa] = useState('s3rinfy@icici');
   const [payeeName, setPayeeName] = useState('Souvik Roy');
   const [amount, setAmount] = useState('1.00');
+
+  useEffect(() => {
+    // Function to open the chooser on Android
+    const openChooser = (upiLink) => {
+      const a = document.createElement('a');
+      a.href = upiLink;
+      a.click();
+    };
+
+    window.openChooser = openChooser;
+  }, []);
 
   const handlePayment = () => {
     const upiLink = generateUpiLink({
@@ -17,23 +28,15 @@ const Payment = () => {
     console.log('Generated UPI Link:', upiLink);
 
     if (/android/i.test(navigator.userAgent)) {
-      // Open a dummy intent to trigger the chooser
-      const dummyIntent = `intent://#Intent;scheme=upi;action=android.intent.action.VIEW;end`;
-      window.location.href = dummyIntent;
-
-      // Open the actual UPI link after a slight delay to ensure the chooser is shown
-      setTimeout(() => {
-        window.location.href = upiLink;
-      }, 500);
+      const chooserIntent = `intent://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(generateTransactionRef())}&cu=INR#Intent;scheme=upi;package=null;end`;
+      window.openChooser(chooserIntent);
     } else {
-      // For iOS and other platforms
       window.location.href = upiLink;
     }
   };
 
   const generateUpiLink = ({ payeeVpa, payeeName, amount, transactionRef }) => {
-    const baseLink = `upi://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR`;
-    return baseLink; // Use the base link for both Android and iOS
+    return `upi://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(transactionRef)}&cu=INR`;
   };
 
   const generateTransactionRef = () => {
