@@ -63,9 +63,13 @@ const Payment = () => {
         }
       };
 
-      window.location = urlScheme;
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = urlScheme;
+      document.body.appendChild(iframe);
 
       setTimeout(() => {
+        document.body.removeChild(iframe);
         if (!hasResponded) {
           handleFallback();
         }
