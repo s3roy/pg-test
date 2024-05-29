@@ -40,13 +40,11 @@ const Payment = () => {
   const getUrlScheme = (upiApp) => {
     switch (upiApp) {
       case 'GPay':
-        return 'com.google.android.apps.nbu.paisa.user';
+        return 'tez://';
       case 'PhonePe':
-        return 'com.phonepe.app';
+        return 'phonepe://';
       case 'Paytm':
-        return 'net.one97.paytm';
-      case 'CRED':
-        return 'cred://';
+        return 'paytm://';
       default:
         return 'upi://';
     }
@@ -65,24 +63,29 @@ const Payment = () => {
         }
       };
 
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = urlScheme;
-      document.body.appendChild(iframe);
+      try {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = urlScheme;
+        document.body.appendChild(iframe);
 
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-        if (!hasResponded) {
-          handleFallback();
-        }
-      }, timeout);
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          if (!hasResponded) {
+            handleFallback();
+          }
+        }, timeout);
 
-      window.addEventListener('blur', () => {
-        if (!hasResponded) {
-          resolve(true);
-          hasResponded = true;
-        }
-      });
+        window.addEventListener('blur', () => {
+          if (!hasResponded) {
+            resolve(true);
+            hasResponded = true;
+          }
+        });
+      } catch (error) {
+        console.error('Error checking app installation:', error);
+        resolve(false); // Handle error gracefully
+      }
     });
   };
 
